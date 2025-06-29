@@ -13,7 +13,7 @@ const SoftDelete = () => {
 
   const fetchDeletedMoods = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/recycle-bin?phone=${phone}`);
+      const res = await fetch(`https://mood-app-server.onrender.com/api/recycle-bin?phone=${phone}`);
       const data = await res.json();
       if (data.success) {
         setDeletedItems(data.entries);
@@ -26,7 +26,7 @@ const SoftDelete = () => {
   const handleRestore = async (id) => {
     if (!window.confirm('Are you sure to restore this mood entry?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/restore-mood/${id}`, {
+      const res = await fetch(`https://mood-app-server.onrender.com/api/restore-mood/${id}`, {
         method: 'PATCH',
       });
       const data = await res.json();
@@ -44,7 +44,7 @@ const SoftDelete = () => {
   const handlePermanentDelete = async (id) => {
     if (!window.confirm('⚠️ This will permanently delete the mood entry. Continue?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/permanent-delete/${id}`, {
+      const res = await fetch(`https://mood-app-server.onrender.com/api/permanent-delete/${id}`, {
         method: 'DELETE',
       });
       const data = await res.json();

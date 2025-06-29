@@ -20,7 +20,7 @@ const Home = () => {
 
     const checkMoodStatus = async () => {
         try {
-            const res = await fetch(`http://localhost:5000/api/mood-status?phone=${userPhone}&date=${today}`);
+            const res = await fetch(`https://mood-app-server.onrender.com/api/mood-status?phone=${userPhone}&date=${today}`);
             const data = await res.json();
             if (data.exists) setSubmitted(true);
         } catch (err) {
@@ -40,7 +40,7 @@ const Home = () => {
         };
 
         try {
-            const res = await fetch('http://localhost:5000/api/mood-entry', {
+            const res = await fetch('https://mood-app-server.onrender.com/api/mood-entry', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(moodEntry),

@@ -20,7 +20,7 @@ const MoodHistory = () => {
 
   const fetchMoods = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/mood-history?phone=${phone}`);
+      const res = await fetch(`https://mood-app-server.onrender.com/api/mood-history?phone=${phone}`);
       const data = await res.json();
       if (data.success) {
         const sorted = data.entries
@@ -81,7 +81,7 @@ const MoodHistory = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure to delete this mood?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/mood-delete/${id}`, {
+      const res = await fetch(`https://mood-app-server.onrender.com/api/mood-delete/${id}`, {
         method: 'PATCH',
       });
       const data = await res.json();
@@ -129,8 +129,8 @@ const MoodHistory = () => {
                 <td className="px-4 py-2 border">{entry.mood}</td>
                 <td className="px-4 py-2 border">{entry.note || '-'}</td>
                 <td className="px-4 py-2 border">
-                  <button className=" bg-teal-600 btn mr-2" onClick={() => handleEdit(entry)}>Edit</button>
-                  <button className="text-red-600 btn" onClick={() => handleDelete(entry._id)}>Delete</button>
+                  <button className=" bg-teal-600 btn mr-2 mb-2 md:md-0" onClick={() => handleEdit(entry)}>Edit</button>
+                  <button className="text-red-600 btn mb-2 md:md-0" onClick={() => handleDelete(entry._id)}>Delete</button>
                 </td>
               </tr>
             ))}
