@@ -1,74 +1,95 @@
 import React, { useState } from 'react';
-import SocialLogin from '../components/SocialLogin';
-import useAuthInfo from '../hooks/useAuthInfo';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // 👈 Import navigate hook
+import useAuthInfo from '../hooks/useAuthInfo'; // Custom hook for AuthContext
 
 const Login = () => {
-    const [showPassword, setShowPassword] = useState(false);
-    const { loginUser } = useAuthInfo();
-    const navigate = useNavigate();
-    const location = useLocation();
+  const { setUser } = useAuthInfo(); // Get setUser from context
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // 👈 Initialize navigate
 
-    // Get the page the user was trying to visit or default to home
-    const from = location.state?.from?.pathname || "/";
+  const handleLogin = async () => {
+    if (!phone || !password) {
+      alert('Phone and password are required');
+      return;
+    }
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        const email = e.target.email.value;
-        const password = e.target.password.value;
+    try {
+      setLoading(true);
 
-        loginUser(email, password)
-            .then(result => {
-                const user = result.user;
-                console.log("User logged in:", user);
-                // Redirect to intended route
-                setTimeout(() => navigate(from, { replace: true }), 1000);
-            })
-            .catch(error => {
-                console.error("Error during login:", error);
-            });
-    };
+      const res = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, password }),
+      });
 
-    return (
-        <div className='max-w-sm mx-auto py-20 px-2'>
-            <form onSubmit={handleLogin}>
-                <div className="mb-5">
-                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="name@flowbite.com"
-                        required
-                    />
-                </div>
-                <div className="mb-5">
-                    <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-                    <input
-                        type={showPassword ? "text" : "password"}
-                        name="password"
-                        id="password"
-                        className="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        required
-                    />
-                </div>
-                <div className="mb-2">
-                    <input type="checkbox" id="show-password" onChange={() => setShowPassword(!showPassword)} className="mr-2" />
-                    <label htmlFor="show-password" className="text-sm font-medium text-gray-900 dark:text-gray-300">Show Password</label>
-                </div>
+      const data = await res.json();
 
-                <button
-                    type="submit"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                    Login
-                </button>
-            </form>
+      if (!res.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
 
-            <SocialLogin />
+      // Save to localStorage
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('phone', data.data);
+
+      // Update global context
+      setUser({ phone });
+
+      alert('Logged in!');
+      navigate('/'); // 👈 Redirect to home
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Login to Your Account
+        </h2>
+
+        <div className="space-y-4">
+          <input
+            type="text"
+            placeholder="Enter your phone number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+          <button
+            onClick={handleLogin}
+            disabled={loading}
+            className={`w-full py-2 px-4 rounded-lg font-semibold transition ${
+              loading
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
         </div>
-    );
+
+        <p className="mt-4 text-sm text-center text-gray-500">
+          Don’t have an account?{' '}
+          <a href="/register" className="text-blue-600 hover:underline">
+            Register
+          </a>
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default Login;

@@ -1,53 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import AuthContext from './AuthContext';
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase/firebase.config';
-
+import { useEffect, useState } from "react";
+import AuthContext from "./AuthContext";
 
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const googleProvider = new GoogleAuthProvider();
+  const [user, setUser] = useState(null);
 
-    const googleSignIn = () => {
-        return signInWithPopup(auth, googleProvider);
-    }
+  useEffect(() => {
+  const loggedIn = localStorage.getItem('loggedIn') === 'true';
+  const phone = localStorage.getItem('phone');
 
-     const createUser = (email, password) => {
-        return createUserWithEmailAndPassword(auth, email, password);
-    }
+  if (loggedIn && phone) {
+    setUser({ phone }); // Set actual phone number in context
+  } else {
+    setUser(null);
+  }
+}, []);
 
-    const loginUser = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password);
-    }
-
-    const logoutUser = () => {
-        return signOut(auth);
-    }
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            console.log('state captured', currentUser)
-            setUser(currentUser);
-
-        });
-        // Cleanup subscription on unmount
-        return () => {
-            unsubscribe();
-        }
-    }, [])
-
-    const authInfo = {
-        user,
-        googleSignIn,
-        logoutUser,
-        createUser,
-        loginUser
-    }
-    return (
-        <AuthContext.Provider value={authInfo}>
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export default AuthProvider;
+export default AuthProvider

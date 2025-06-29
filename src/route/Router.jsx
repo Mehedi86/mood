@@ -2,18 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-// import Home from "../pages/Home";
-// import AllBooks from "../pages/AllBooks";
-// import Login from "../pages/Login";
-// import Register from "../pages/Register";
-// import GenreWiseBooks from "../pages/GenreWiseBooks";
-// import BookDetails from "../pages/BookDetails";
-// import AddBook from "../pages/AddBook";
-// import UpdateBook from "../pages/UpdateBook";
-// import BorrowedBooks from "../pages/BorrowedBooks";
-// import PrivateRoute from "./PrivateRoute";
-// import ErrorPage from "../pages/ErrorPage";
-// import BookDetailsWithoutBorrow from "../pages/BookDetailsWithoutBorrow";
+import Home from "../pages/Home";
+import MoodHistory from "../pages/MoodHistory";
+import SoftDelete from "../pages/SoftDelete";
 
 const router = createBrowserRouter([
     {
@@ -28,6 +19,18 @@ const router = createBrowserRouter([
             {
                 path: '/register',
                 element: <Register/>
+            },
+            {
+                path: '/',
+                element: <Home/>
+            },
+            {
+                path: '/mood-history',
+                element: <MoodHistory/>
+            },
+            {
+                path: '/soft-delete',
+                element: <SoftDelete/>
             }
             
         ]

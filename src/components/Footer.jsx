@@ -11,11 +11,11 @@ const Footer = () => {
                     {/* left */}
                     <div>
                         <div className='text-white flex gap-2 items-center'>
-                            <img className='w-12' src="/logo.avif" alt="" />
-                            <h1 className='font-semibold text-2xl'>MatrimonySite</h1>
+                            <img className='w-12' src="/icon.png" alt="" />
+                            <h1 className='font-semibold text-2xl'>Mood</h1>
                         </div>
                         <div>
-                            <h1>Bangladeshi matrimony website</h1>
+                            <h1>Web Appliction</h1>
                             <p>Dhaka, 1700</p>
                             <p>Bangladesh</p>
                         </div>
@@ -25,7 +25,7 @@ const Footer = () => {
                         <h1 className='text-2xl font-semibold'>Contact Info</h1>
                         <div className='py-2 space-y-0.5'>
                             <p className='flex items-center gap-2'><IoPhonePortraitOutline /> 65446465456</p>
-                            <p className='flex items-center gap-2'><MdEmail /> matrimonyBD.com</p>
+                            <p className='flex items-center gap-2'><MdEmail /> mood.com</p>
                             <p className='flex items-center gap-2'><FaSquareWhatsapp /> 654415454</p>
                         </div>
                     </div>
